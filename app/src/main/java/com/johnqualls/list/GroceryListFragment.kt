@@ -27,5 +27,4 @@ class GroceryListFragment : Fragment() {
         grocery_list_items.adapter = GrocerListAdapter()
     }
 
-
 }

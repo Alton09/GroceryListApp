@@ -2,29 +2,35 @@ package com.johnqualls.list
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.johnqualls.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 
-class GroceryListViewModel(private val groceryListDataSource: GroceryListDataSource) : ViewModel() {
+class GroceryListViewModel(private val groceryListDataSource: GroceryListDataSource) : BaseViewModel() {
     val items = MutableLiveData<GroceryListViewState>()
 
     init {
         items.value = GroceryListViewState(loading = View.VISIBLE)
-        groceryListDataSource
-            .retrieveItems()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                items.value = GroceryListViewState(retrievedItems = it, loading = View.INVISIBLE)
-            }, {
-                Timber.e(it)
-            })
+        disposables.add(
+            groceryListDataSource
+                .retrieveItems()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    items.value = GroceryListViewState(retrievedItems = it, loading = View.INVISIBLE)
+                }, {
+                    Timber.e(it)
+                })
+        )
+
     }
 
-//    fun checkItem(itemId: Int) {
-//        val newItem = items.value?.find { it.id == itemId}?.copy(
-//            checked = true
-//        )
-//
-//    }
+    fun checkItem(itemId: Int) {
+        val newItem = items.value?.run {
+            val matchedItem = retrievedItems.find { it.id == itemId }
+            val newItem = matchedItem?.let { it.copy(checked = !it.checked) }
+            listOf(retrievedItems.filter { it.id != matchedItem!!.id })
+        }
+
+
+    }
 }

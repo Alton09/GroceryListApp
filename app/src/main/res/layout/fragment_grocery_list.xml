@@ -22,7 +22,7 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/grocery_list_items"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/grocery_list_toolbar"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 data="@{viewModel.items}"/>
