@@ -6,6 +6,7 @@ import com.johnqualls.BaseViewModel
 import com.johnqualls.item.GroceryItem
 import com.johnqualls.list.GroceryListViewEvent.*
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class GroceryListViewModel(
@@ -17,14 +18,7 @@ class GroceryListViewModel(
 
     init {
         disposables.add(
-            groceryListDataSource
-                .retrieveItems()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ items ->
-                    updateState { oldState -> oldState.copy(retrievedItems = items.sortedBy { it.name }, loading = View.INVISIBLE) }
-                }, {
-                    Timber.e(it)
-                })
+            retrieveItems()
         )
 
     }
@@ -33,6 +27,9 @@ class GroceryListViewModel(
         when (event) {
             is ItemCheck -> {
                 checkItem(event.groceryItemId)
+            }
+            SwipeRefresh -> {
+                retrieveItems()
             }
         }
     }
@@ -48,6 +45,23 @@ class GroceryListViewModel(
             }
             newState
         }
+    }
+
+    private fun retrieveItems(): Disposable {
+        updateState { it.copy(loading = true) }
+        return groceryListDataSource
+            .retrieveItems()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ items ->
+                updateState { oldState ->
+                    oldState.copy(
+                        retrievedItems = items.sortedBy { it.name },
+                        loading = false
+                    )
+                }
+            }, {
+                Timber.e(it)
+            })
     }
 
     private fun updateState(action: (oldState: GroceryListViewState) -> GroceryListViewState) {

@@ -3,12 +3,13 @@ package com.johnqualls.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.johnqualls.BindableAdapter
+import com.johnqualls.bindable.BindableAdapter
 import com.johnqualls.R
 import com.johnqualls.item.GroceryItem
 import io.reactivex.subjects.PublishSubject
 
-class GrocerListAdapter : RecyclerView.Adapter<GroceryItemViewHolder>(), BindableAdapter<GroceryListViewState> {
+class GrocerListAdapter : RecyclerView.Adapter<GroceryItemViewHolder>(),
+    BindableAdapter<GroceryListViewState> {
     private val items = mutableListOf<GroceryItem>()
     private val publishSubject = PublishSubject.create<GroceryListViewEvent>()
     val viewEventObservable = publishSubject.hide()

@@ -1,4 +1,4 @@
-package com.johnqualls
+package com.johnqualls.bindable
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView

@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.johnqualls.databinding.FragmentGroceryListBinding
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_grocery_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,10 +40,12 @@ class GroceryListFragment : Fragment()  {
     }
 
     private fun registerInput() {
-        (grocery_list_items.adapter as GrocerListAdapter)
-            .viewEventObservable
+        Observable.merge(
+        (grocery_list_items.adapter as GrocerListAdapter).viewEventObservable,
+            grocery_list_progress.refreshes().map { GroceryListViewEvent.SwipeRefresh }
+        )
             .subscribe({
-                viewModel.processInputs(it)
+                viewModel.processInputs(it as GroceryListViewEvent)
             },{
                 Timber.e(it)
             })
