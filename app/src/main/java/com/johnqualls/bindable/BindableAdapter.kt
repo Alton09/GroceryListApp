@@ -3,7 +3,7 @@ package com.johnqualls.bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-interface BindableAdapter<T>{
+interface BindableAdapter<T> {
     fun swap(items: T)
 }
 

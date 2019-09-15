@@ -3,8 +3,8 @@ package com.johnqualls.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.johnqualls.bindable.BindableAdapter
 import com.johnqualls.R
+import com.johnqualls.bindable.BindableAdapter
 import com.johnqualls.item.GroceryItem
 import io.reactivex.subjects.PublishSubject
 

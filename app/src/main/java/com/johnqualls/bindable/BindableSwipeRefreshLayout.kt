@@ -9,5 +9,5 @@ interface BindableSwipeRefreshLayout {
 
 @BindingAdapter("isRefreshing")
 fun bindIsRefreshing(swipeRefreshLayout: SwipeRefreshLayout, isRefreshing: Boolean) {
-        swipeRefreshLayout.isRefreshing = isRefreshing
+    swipeRefreshLayout.isRefreshing = isRefreshing
 }

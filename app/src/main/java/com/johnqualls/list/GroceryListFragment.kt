@@ -15,13 +15,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class GroceryListFragment : Fragment()  {
+class GroceryListFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
     private val viewModel by viewModel<GroceryListViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        FragmentGroceryListBinding.inflate(inflater, container, false).apply{
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
+        FragmentGroceryListBinding.inflate(inflater, container, false).apply {
             viewModel = this@GroceryListFragment.viewModel
             lifecycleOwner = this@GroceryListFragment.viewLifecycleOwner
         }.root
@@ -41,12 +45,12 @@ class GroceryListFragment : Fragment()  {
 
     private fun registerInput() {
         Observable.merge(
-        (grocery_list_items.adapter as GrocerListAdapter).viewEventObservable,
+            (grocery_list_items.adapter as GrocerListAdapter).viewEventObservable,
             grocery_list_progress.refreshes().map { GroceryListViewEvent.SwipeRefresh }
         )
             .subscribe({
                 viewModel.processInputs(it as GroceryListViewEvent)
-            },{
+            }, {
                 Timber.e(it)
             })
             .addTo(disposables)

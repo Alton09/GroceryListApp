@@ -1,10 +1,9 @@
 package com.johnqualls.list
 
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.johnqualls.BaseViewModel
-import com.johnqualls.item.GroceryItem
-import com.johnqualls.list.GroceryListViewEvent.*
+import com.johnqualls.list.GroceryListViewEvent.ItemCheck
+import com.johnqualls.list.GroceryListViewEvent.SwipeRefresh
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -39,7 +38,8 @@ class GroceryListViewModel(
             var newState = oldState
             oldState.retrievedItems.find { it.id == itemId }?.let { matchedItem ->
                 val newItem = matchedItem.copy(checked = !matchedItem.checked)
-                val newItems = oldState.retrievedItems.filter { it.id != matchedItem.id }.toMutableList()
+                val newItems =
+                    oldState.retrievedItems.filter { it.id != matchedItem.id }.toMutableList()
                 newItems.add(newItem)
                 newState = oldState.copy(retrievedItems = newItems.toList().sortedBy { it.name })
             }

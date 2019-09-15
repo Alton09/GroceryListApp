@@ -3,8 +3,8 @@ package com.johnqualls.list
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.johnqualls.item.GroceryItem
+import com.johnqualls.list.GroceryListViewEvent.ItemCheck
 import kotlinx.android.synthetic.main.grocery_item.view.*
-import com.johnqualls.list.GroceryListViewEvent.*
 
 class GroceryItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
