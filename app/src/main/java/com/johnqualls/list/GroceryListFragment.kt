@@ -7,11 +7,15 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.johnqualls.databinding.FragmentGroceryListBinding
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_grocery_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
-class GroceryListFragment : Fragment() {
+class GroceryListFragment : Fragment()  {
+
+    private val disposables = CompositeDisposable()
     private val viewModel by viewModel<GroceryListViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -25,6 +29,22 @@ class GroceryListFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).setSupportActionBar(grocery_list_toolbar)
         grocery_list_items.adapter = GrocerListAdapter()
+        registerInput()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
+    }
+
+    private fun registerInput() {
+        (grocery_list_items.adapter as GrocerListAdapter)
+            .viewEventObservable
+            .subscribe({
+                viewModel.processInputs(it)
+            },{
+                Timber.e(it)
+            })
+            .addTo(disposables)
+    }
 }

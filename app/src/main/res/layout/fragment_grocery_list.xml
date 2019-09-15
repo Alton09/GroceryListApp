@@ -25,12 +25,12 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/grocery_list_toolbar"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                data="@{viewModel.items}"/>
+                data="@{viewModel.viewState}"/>
 
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.items.loading}"
+                android:visibility="@{viewModel.viewState.loading}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

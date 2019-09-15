@@ -1,6 +1,6 @@
 package com.johnqualls.list
 
 sealed class GroceryListViewEvent {
-    object ItemCheck: GroceryListViewEvent()
+    data class ItemCheck(val groceryItemId: Int): GroceryListViewEvent()
     object SwipeRefresh: GroceryListViewEvent()
 }

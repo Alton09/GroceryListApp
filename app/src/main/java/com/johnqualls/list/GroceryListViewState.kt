@@ -5,6 +5,6 @@ import com.johnqualls.item.GroceryItem
 
 data class GroceryListViewState(
     val retrievedItems : List<GroceryItem> = emptyList(),
-    val loading: Int = View.INVISIBLE,
+    val loading: Int = View.VISIBLE,
     val retrievalError: Boolean = false
 )

@@ -3,20 +3,25 @@ package com.johnqualls.list
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.johnqualls.BaseViewModel
+import com.johnqualls.item.GroceryItem
+import com.johnqualls.list.GroceryListViewEvent.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 
-class GroceryListViewModel(private val groceryListDataSource: GroceryListDataSource) : BaseViewModel() {
-    val items = MutableLiveData<GroceryListViewState>()
+class GroceryListViewModel(
+    private val groceryListDataSource: GroceryListDataSource,
+    private val initialState: GroceryListViewState = GroceryListViewState()
+) : BaseViewModel() {
+
+    val viewState = MutableLiveData<GroceryListViewState>().apply { value = initialState }
 
     init {
-        items.value = GroceryListViewState(loading = View.VISIBLE)
         disposables.add(
             groceryListDataSource
                 .retrieveItems()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    items.value = GroceryListViewState(retrievedItems = it, loading = View.INVISIBLE)
+                .subscribe({ items ->
+                    updateState { oldState -> oldState.copy(retrievedItems = items.sortedBy { it.name }, loading = View.INVISIBLE) }
                 }, {
                     Timber.e(it)
                 })
@@ -24,13 +29,34 @@ class GroceryListViewModel(private val groceryListDataSource: GroceryListDataSou
 
     }
 
-    fun checkItem(itemId: Int) {
-        val newItem = items.value?.run {
-            val matchedItem = retrievedItems.find { it.id == itemId }
-            val newItem = matchedItem?.let { it.copy(checked = !it.checked) }
-            listOf(retrievedItems.filter { it.id != matchedItem!!.id })
+    fun processInputs(event: GroceryListViewEvent) {
+        when (event) {
+            is ItemCheck -> {
+                checkItem(event.groceryItemId)
+            }
         }
+    }
 
+    fun checkItem(itemId: Int) {
+        updateState { oldState ->
+            var newState = oldState
+            oldState.retrievedItems.find { it.id == itemId }?.let { matchedItem ->
+                val newItem = matchedItem.copy(checked = !matchedItem.checked)
+                val newItems = oldState.retrievedItems.filter { it.id != matchedItem.id }.toMutableList()
+                newItems.add(newItem)
+                newState = oldState.copy(retrievedItems = newItems.toList().sortedBy { it.name })
+            }
+            newState
+        }
+    }
 
+    private fun updateState(action: (oldState: GroceryListViewState) -> GroceryListViewState) {
+        val oldState = viewState.value ?: GroceryListViewState()
+        val newState = action(oldState)
+        viewState.value = newState
+    }
+
+    private fun currentState(action: (currentState: GroceryListViewState) -> Unit) {
+        action(viewState.value ?: GroceryListViewState())
     }
 }
