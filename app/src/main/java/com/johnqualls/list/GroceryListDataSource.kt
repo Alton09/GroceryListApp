@@ -1,8 +1,7 @@
 package com.johnqualls.list
 
 import com.johnqualls.item.GroceryItem
-import io.reactivex.Single
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.delay
 
 class GroceryListDataSource {
 
@@ -13,5 +12,8 @@ class GroceryListDataSource {
         GroceryItem(3, "Tofu", false)
     )
 
-    fun retrieveItems() = Single.just(items).delay(3, TimeUnit.SECONDS)
+    suspend fun retrieveItems(): List<GroceryItem> {
+        delay(3000)
+        return items
+    }
 }

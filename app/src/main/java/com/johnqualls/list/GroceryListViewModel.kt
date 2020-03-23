@@ -1,26 +1,26 @@
 package com.johnqualls.list
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.johnqualls.BaseViewModel
+import com.johnqualls.item.GroceryItem
 import com.johnqualls.list.GroceryListViewEvent.ItemCheck
 import com.johnqualls.list.GroceryListViewEvent.SwipeRefresh
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 class GroceryListViewModel(
     private val groceryListDataSource: GroceryListDataSource,
-    private val initialState: GroceryListViewState = GroceryListViewState()
+    private val initialState: GroceryListViewState = GroceryListViewState(),
+    private val ioCoroutineContext: CoroutineContext = Dispatchers.IO
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<GroceryListViewState>().apply { value = initialState }
 
     init {
-        disposables.add(
-            retrieveItems()
-        )
-
+        retrieveItems()
     }
 
     fun processInputs(event: GroceryListViewEvent) {
@@ -48,22 +48,15 @@ class GroceryListViewModel(
         }
     }
 
-    private fun retrieveItems(): Disposable {
+    private fun retrieveItems() {
         updateState { it.copy(loading = true) }
-        return groceryListDataSource
-            .retrieveItems()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ items ->
-                updateState { oldState ->
-                    oldState.copy(
-                        retrievedItems = items.sortedBy { it.name },
-                        loading = false
-                    )
-                }
-            }, {
-                Timber.e(it)
-            })
+        viewModelScope.launch {
+            var items = emptyList<GroceryItem>()
+            withContext(ioCoroutineContext) {
+                items = groceryListDataSource.retrieveItems()
+            }
+            updateState { it.copy(retrievedItems = items, loading = false) }
+        }
     }
 
     private fun updateState(action: (oldState: GroceryListViewState) -> GroceryListViewState) {
