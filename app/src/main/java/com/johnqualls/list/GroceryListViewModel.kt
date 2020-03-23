@@ -6,6 +6,7 @@ import com.johnqualls.list.GroceryListViewEvent.ItemCheck
 import com.johnqualls.list.GroceryListViewEvent.SwipeRefresh
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class GroceryListViewModel(
@@ -51,6 +52,7 @@ class GroceryListViewModel(
         updateState { it.copy(loading = true) }
         return groceryListDataSource
             .retrieveItems()
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ items ->
                 updateState { oldState ->

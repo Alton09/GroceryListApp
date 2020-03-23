@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 
 class GroceryListDataSource {
 
-    val items = mutableListOf<GroceryItem>(
+    val items = mutableListOf(
         GroceryItem(0, "Bread", true),
         GroceryItem(1, "Cherries", false),
         GroceryItem(2, "Milk", false),
