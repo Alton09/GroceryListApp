@@ -9,12 +9,12 @@ import com.johnqualls.item.GroceryItem
 import io.reactivex.subjects.PublishSubject
 
 class GrocerListAdapter : RecyclerView.Adapter<GroceryItemViewHolder>(),
-    BindableAdapter<GroceryListViewState> {
+    BindableAdapter<GroceryListState> {
     private val items = mutableListOf<GroceryItem>()
     private val publishSubject = PublishSubject.create<GroceryListViewEvent>()
     val viewEventObservable = publishSubject.hide()
 
-    override fun swap(items: GroceryListViewState) {
+    override fun swap(items: GroceryListState) {
         this.items.clear()
         this.items.addAll(items.retrievedItems)
         notifyDataSetChanged()

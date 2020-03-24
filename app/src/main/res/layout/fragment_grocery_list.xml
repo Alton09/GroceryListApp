@@ -2,13 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.johnqualls.list.GroceryListViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +17,6 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/grocery_list_progress"
             style="?android:attr/progressBarStyleLarge"
-            isRefreshing="@{viewModel.viewState.loading}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/grocery_list_toolbar"
@@ -34,7 +26,6 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/grocery_list_items"
-                data="@{viewModel.viewState}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

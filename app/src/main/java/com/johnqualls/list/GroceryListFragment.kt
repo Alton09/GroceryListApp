@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.johnqualls.databinding.FragmentGroceryListBinding
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.uniflow.androidx.flow.onStates
 import kotlinx.android.synthetic.main.fragment_grocery_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -20,14 +21,15 @@ class GroceryListFragment : Fragment() {
     private val disposables = CompositeDisposable()
     private val viewModel by viewModel<GroceryListViewModel>()
 
+    private lateinit var databinding: FragmentGroceryListBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) =
         FragmentGroceryListBinding.inflate(inflater, container, false).apply {
-            viewModel = this@GroceryListFragment.viewModel
-            lifecycleOwner = this@GroceryListFragment.viewLifecycleOwner
+            databinding = this
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,6 +38,21 @@ class GroceryListFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(grocery_list_toolbar)
         grocery_list_items.adapter = GrocerListAdapter()
         registerInput()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        onStates(viewModel) { state ->
+            when(state) {
+                is GroceryListState -> {
+                    databinding.run {
+                        groceryListProgress.isRefreshing = state.loading
+                        (groceryListItems.adapter as GrocerListAdapter).let { it.swap(state) }
+                    }
+
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
