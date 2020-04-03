@@ -44,6 +44,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesAndroidVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroidVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation project(':udf')
 
     testImplementation 'junit:junit:4.12'
 }
