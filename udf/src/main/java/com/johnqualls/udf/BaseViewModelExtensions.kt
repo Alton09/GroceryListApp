@@ -14,7 +14,7 @@ fun <VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT> Fragment.observeViewState(
 
 fun <VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT> Fragment.observeViewEffects(
     viewModel: BaseViewModel<VIEW_EVENT, VIEW_STATE, VIEW_EFFECT>,
-    action: (viewState: VIEW_EFFECT) -> Unit
+    action: (viewState: ViewEffect<VIEW_EFFECT>) -> Unit
 ) {
 
     viewModel.viewEffects.observe(this, Observer { action(it) })

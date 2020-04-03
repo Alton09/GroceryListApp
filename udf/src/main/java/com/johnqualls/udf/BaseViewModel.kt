@@ -8,9 +8,9 @@ private const val NULL_VIEW_STATE_ERROR = "ViewState can never be null"
 
 abstract class BaseViewModel<VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT>(initialViewState: VIEW_STATE) : ViewModel() {
     protected val mutableViewState = MutableLiveData<VIEW_STATE>(initialViewState)
-    protected val mutableViewEffects = MutableLiveData<VIEW_EFFECT>()
+    protected val mutableViewEffects = MutableLiveData<ViewEffect<VIEW_EFFECT>>()
     val viewState: LiveData<VIEW_STATE> = mutableViewState
-    val viewEffects: LiveData<VIEW_EFFECT> = mutableViewEffects
+    val viewEffects: LiveData<ViewEffect<VIEW_EFFECT>> = mutableViewEffects
 
     abstract fun processInput(viewEvent: VIEW_EVENT)
 
@@ -28,6 +28,6 @@ abstract class BaseViewModel<VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT>(initialV
     }
 
     protected fun viewEffect(action: () -> VIEW_EFFECT) {
-        mutableViewEffects.value = action()
+        mutableViewEffects.value = ViewEffect(action())
     }
 }

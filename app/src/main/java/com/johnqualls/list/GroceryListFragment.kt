@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.johnqualls.R
 import com.johnqualls.databinding.FragmentGroceryListBinding
 import com.johnqualls.list.GroceryListViewEffect.SyncComplete
+import com.johnqualls.udf.ViewEffect
 import com.johnqualls.udf.observeViewEffects
 import com.johnqualls.udf.observeViewState
 import io.reactivex.Observable
@@ -62,9 +63,11 @@ class GroceryListFragment : Fragment() {
         }
     }
 
-    private fun bindViewEffects(viewEffect: GroceryListViewEffect) {
-        if (viewEffect is SyncComplete) {
-            Snackbar.make(databinding.root, getString(R.string.sync_complete), Snackbar.LENGTH_SHORT).show()
+    private fun bindViewEffects(viewEffectWrapper: ViewEffect<GroceryListViewEffect>) {
+        viewEffectWrapper.getContentIfNotHandled()?.let { viewEffect ->
+            if (viewEffect is SyncComplete) {
+                Snackbar.make(databinding.root, getString(R.string.sync_complete), Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
