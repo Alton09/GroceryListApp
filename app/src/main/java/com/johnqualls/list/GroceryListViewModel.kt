@@ -2,6 +2,7 @@ package com.johnqualls.list
 
 import androidx.lifecycle.viewModelScope
 import com.johnqualls.item.GroceryItem
+import com.johnqualls.list.GroceryListViewEffect.SyncComplete
 import com.johnqualls.list.GroceryListViewEvent.ItemCheck
 import com.johnqualls.list.GroceryListViewEvent.SwipeRefresh
 import com.johnqualls.udf.BaseViewModel
@@ -53,6 +54,7 @@ class GroceryListViewModel(
                 items = groceryListDataSource.retrieveItems()
             }
             updateState { it.copy(retrievedItems = items, loading = false) }
+            viewEffect { SyncComplete }
         }
     }
 }

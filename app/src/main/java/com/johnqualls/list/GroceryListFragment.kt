@@ -6,8 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
+import com.johnqualls.R
 import com.johnqualls.databinding.FragmentGroceryListBinding
+import com.johnqualls.list.GroceryListViewEffect.SyncComplete
+import com.johnqualls.udf.observeViewEffects
 import com.johnqualls.udf.observeViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -25,6 +29,7 @@ class GroceryListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         observeViewState(viewModel, ::bindViewState)
+        observeViewEffects(viewModel, ::bindViewEffects)
     }
 
     override fun onCreateView(
@@ -54,6 +59,12 @@ class GroceryListFragment : Fragment() {
         databinding.run {
             groceryListProgress.isRefreshing = viewState.loading
             (groceryListItems.adapter as GrocerListAdapter).let { it.swap(viewState) }
+        }
+    }
+
+    private fun bindViewEffects(viewEffect: GroceryListViewEffect) {
+        if (viewEffect is SyncComplete) {
+            Snackbar.make(databinding.root, getString(R.string.sync_complete), Snackbar.LENGTH_SHORT).show()
         }
     }
 
