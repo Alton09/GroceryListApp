@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.johnqualls.databinding.FragmentGroceryListBinding
+import com.johnqualls.udf.observeViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_grocery_list.*
@@ -19,6 +20,12 @@ class GroceryListFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
     private val viewModel by viewModel<GroceryListViewModel>()
+    private lateinit var databinding: FragmentGroceryListBinding
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        observeViewState(viewModel, ::bindViewState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,8 +33,8 @@ class GroceryListFragment : Fragment() {
         savedInstanceState: Bundle?
     ) =
         FragmentGroceryListBinding.inflate(inflater, container, false).apply {
-            viewModel = this@GroceryListFragment.viewModel
             lifecycleOwner = this@GroceryListFragment.viewLifecycleOwner
+            databinding = this
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,13 +50,20 @@ class GroceryListFragment : Fragment() {
         disposables.dispose()
     }
 
+    private fun bindViewState(viewState: GroceryListViewState) {
+        databinding.run {
+            groceryListProgress.isRefreshing = viewState.loading
+            (groceryListItems.adapter as GrocerListAdapter).let { it.swap(viewState) }
+        }
+    }
+
     private fun registerInput() {
         Observable.merge(
             (grocery_list_items.adapter as GrocerListAdapter).viewEventObservable,
             grocery_list_progress.refreshes().map { GroceryListViewEvent.SwipeRefresh }
         )
             .subscribe({
-                viewModel.processInputs(it as GroceryListViewEvent)
+                viewModel.processInput(it as GroceryListViewEvent)
             }, {
                 Timber.e(it)
             })
