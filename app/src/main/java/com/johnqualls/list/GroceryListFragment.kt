@@ -63,11 +63,9 @@ class GroceryListFragment : Fragment() {
         }
     }
 
-    private fun bindViewEffects(viewEffectWrapper: ViewEffect<GroceryListViewEffect>) {
-        viewEffectWrapper.getContentIfNotHandled()?.let { viewEffect ->
-            if (viewEffect is SyncComplete) {
-                Snackbar.make(databinding.root, getString(R.string.sync_complete), Snackbar.LENGTH_SHORT).show()
-            }
+    private fun bindViewEffects(viewEffect: GroceryListViewEffect) {
+        if (viewEffect is SyncComplete) {
+            Snackbar.make(databinding.root, getString(R.string.sync_complete), Snackbar.LENGTH_SHORT).show()
         }
     }
 

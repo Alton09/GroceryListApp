@@ -14,8 +14,10 @@ fun <VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT> Fragment.observeViewState(
 
 fun <VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT> Fragment.observeViewEffects(
     viewModel: BaseViewModel<VIEW_EVENT, VIEW_STATE, VIEW_EFFECT>,
-    action: (viewState: ViewEffect<VIEW_EFFECT>) -> Unit
+    action: (viewEffect: VIEW_EFFECT) -> Unit
 ) {
 
-    viewModel.viewEffects.observe(this, Observer { action(it) })
+    viewModel.viewEffects.observe(this, Observer {
+        it.getContentIfNotHandled()?.let{ viewEffect ->  action(viewEffect) }
+    })
 }
