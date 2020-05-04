@@ -3,18 +3,18 @@ package com.johnqualls.udf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 
-fun <VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT> Fragment.observeViewState(
-    viewModel: BaseViewModel<VIEW_EVENT, VIEW_STATE, VIEW_EFFECT>,
-    action: (viewState: VIEW_STATE) -> Unit
+fun <T, U : Any, V> Fragment.observeViewState(
+    viewModel: BaseViewModel<T, U, V>,
+    action: (viewState: U) -> Unit
 ) {
 
     viewModel.viewState.observe(this, Observer { action(it) })
 }
 
 
-fun <VIEW_EVENT, VIEW_STATE : Any, VIEW_EFFECT> Fragment.observeViewEffects(
-    viewModel: BaseViewModel<VIEW_EVENT, VIEW_STATE, VIEW_EFFECT>,
-    action: (viewEffect: VIEW_EFFECT) -> Unit
+fun <T, U : Any, V> Fragment.observeViewEffects(
+    viewModel: BaseViewModel<T, U, V>,
+    action: (viewEffect: V) -> Unit
 ) {
 
     viewModel.viewEffects.observe(this, Observer {
