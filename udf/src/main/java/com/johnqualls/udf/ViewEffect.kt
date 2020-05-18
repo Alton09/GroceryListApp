@@ -1,7 +1,7 @@
 package com.johnqualls.udf
 
 /**
- * This class allows for a single event [view effect][BaseViewModel.viewEffects] for a LiveData
+ * This class allows for single event [view effects][BaseViewModel.viewEffects] for a LiveData
  * stream.
  */
 class ViewEffect<T> internal constructor(private val content: T) {
