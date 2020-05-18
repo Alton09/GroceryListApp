@@ -1,16 +1,19 @@
 package com.johnqualls.udf
 
-class ViewEffect<T>(private val content: T) {
+/**
+ * This class allows for a single event [view effect][BaseViewModel.viewEffects] for a LiveData
+ * stream.
+ */
+class ViewEffect<T> internal constructor(private val content: T) {
 
-    var hasBeenHandled = false
-        private set
+    /** The emitted view effect, or null if it has already been retrieved **/
+    val viewEffect: T? get() = getContentIfNotHandled()
+    private var hasBeenHandled = false
 
-    fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
-            null
+    private fun getContentIfNotHandled(): T? =
+        if (hasBeenHandled) { null
         } else {
             hasBeenHandled = true
             content
         }
-    }
 }
