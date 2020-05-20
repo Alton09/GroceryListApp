@@ -34,9 +34,9 @@ class BaseViewModelTest {
 
         viewModel.sendTestViewEffect()
 
-        assertThat(viewModel.viewEffects.value!!.getContentIfNotHandled() is SomeViewEffect,
+        assertThat(viewModel.viewEffects.value!!.viewEffect is SomeViewEffect,
             equalTo(true))
-        assertThat(viewModel.viewEffects.value!!.getContentIfNotHandled(), `is`(nullValue()))
+        assertThat(viewModel.viewEffects.value!!.viewEffect, `is`(nullValue()))
     }
 
     class TestViewEvent
