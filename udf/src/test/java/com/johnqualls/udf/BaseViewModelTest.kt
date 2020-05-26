@@ -40,30 +40,4 @@ class BaseViewModelTest {
             equalTo(true))
         assertThat(viewModel.viewEffects.value!!.viewEffect, `is`(nullValue()))
     }
-
-    class TestViewEvent
-    data class TestViewState(val someString: String = "Test", val someBool: Boolean = true)
-    sealed class TestViewEffect {
-        object SomeViewEffect: TestViewEffect()
-    }
-
-    class TestViewModel(initialViewState: TestViewState = TestViewState()) : BaseViewModel<TestViewEvent, TestViewState, TestViewEffect>(initialViewState) {
-
-        override fun processInput(viewEvent: TestViewEvent) {
-        }
-
-        fun setSomeBoolToFalse() {
-            updateState { it.copy(someBool = false) }
-        }
-
-        fun updateStateTest() = updateState { it.copy() }
-
-        fun updateViewEffectTest() = updateState { it.copy() }
-
-        fun withStateTest(action: (currentState: TestViewState) -> Unit) = withState(action)
-
-        fun sendTestViewEffect() {
-            viewEffect { SomeViewEffect }
-        }
-    }
 }
