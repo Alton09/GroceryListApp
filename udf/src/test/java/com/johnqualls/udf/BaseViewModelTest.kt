@@ -1,7 +1,9 @@
 package com.johnqualls.udf
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.johnqualls.udf.BaseViewModelTest.TestViewEffect.SomeViewEffect
+import com.johnqualls.udf.util.TestViewEffect.SomeViewEffect
+import com.johnqualls.udf.util.TestViewModel
+import com.johnqualls.udf.util.TestViewState
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
