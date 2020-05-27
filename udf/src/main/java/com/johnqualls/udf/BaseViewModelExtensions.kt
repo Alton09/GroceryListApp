@@ -11,8 +11,7 @@ import androidx.lifecycle.Observer
 fun <T, U : Any, V> Fragment.observeViewState(
     viewModel: BaseViewModel<T, U, V>,
     action: (viewState: U) -> Unit
-) = viewModel.viewState.observe(this, Observer { action(it) })
-
+) = viewModel.viewState.observe(viewLifecycleOwner, Observer { action(it) })
 
 /**
  * Convenience function for observing single [view effect][BaseViewModel.viewEffects] changes.
@@ -23,6 +22,6 @@ fun <T, U : Any, V> Fragment.observeViewEffects(
     viewModel: BaseViewModel<T, U, V>,
     action: (viewEffect: V) -> Unit
 ) =
-    viewModel.viewEffects.observe(this, Observer {
-        it.viewEffect?.let{ viewEffect ->  action(viewEffect) }
+    viewModel.viewEffects.observe(viewLifecycleOwner, Observer {
+        it.viewEffect?.let { viewEffect -> action(viewEffect) }
     })
